@@ -16,7 +16,7 @@ class DiscoveryPageState extends State<DiscoveryPage> {
 
   Future getHotArticles() async {
     final response = await http.get(Uri.encodeFull(
-        'https://timeline-merger-ms.juejin.im/v1/get_entry_by_rank?src=web&uid=59120a711b69e6006865dd7b&device_id=1531286592293&token=eyJhY2Nlc3NfdG9rZW4iOiJuU2ZVQ05tVlZ6VlNUUUNtIiwicmVmcmVzaF90b2tlbiI6ImVSUE52RTN1ODlwZVZ1TXYiLCJ0b2tlbl90eXBlIjoibWFjIiwiZXhwaXJlX2luIjoyNTkyMDAwfQ%3D%3D&limit=20&category=all&recomment=1'));
+        'https://timeline-merger-ms.juejin.im/v1/get_entry_by_rank?src=${httpHeaders['X-Juejin-Src']}&uid=${httpHeaders['X-Juejin-Uid']}&device_id=${httpHeaders['X-Juejin-Client']}&token=${httpHeaders['X-Juejin-Token']}&limit=20&category=all&recomment=1'));
     if (response.statusCode == 200) {
       setState(() {
         hotArticles = json.decode(response.body)['d']['entrylist'];

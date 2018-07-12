@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import '../config/httpHeaders.dart';
-import '../utils/countTime.dart';
+import 'articleDetail.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -58,26 +58,6 @@ class CreatePage extends StatefulWidget {
 
 class CreatePageState extends State<CreatePage>
     with SingleTickerProviderStateMixin {
-  List<Tab> tabs;
-
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    tabs = widget.tabList.map((item) {
-      new Tab(text: item['name']);
-    }).toList();
-    _tabController =
-        new TabController(vsync: this, length: widget.tabList.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     //TODO: implement build
@@ -167,70 +147,87 @@ class ArticleListsState extends State<ArticleLists> {
 
 //单个文章
   Widget createItem(articleInfo) {
+    var objectId = articleInfo['originalUrl']
+        .substring(articleInfo['originalUrl'].lastIndexOf('/') + 1);
     return new Container(
       margin: new EdgeInsets.only(bottom: 10.0),
       padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: new Column(
-        children: <Widget>[
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              new FlatButton(
-                  onPressed: null,
-                  child: new Row(
-                    children: <Widget>[
-                      new CircleAvatar(
-                        backgroundImage: new NetworkImage(
-                            articleInfo['user']['avatarLarge']),
-                      ),
-                      new Padding(padding: new EdgeInsets.only(right: 5.0)),
-                      new Text(articleInfo['user']['username'],style: new TextStyle(color: Colors.black),)
-                    ],
-                  )),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new FlatButton(
-                      onPressed: null,
-                      child: new Text(articleInfo['tags'][0]['title'])),
-                  new Text('/'),
-                  new FlatButton(
-                      onPressed: null,
-                      child: new Text(articleInfo['tags'][0]['title']))
-                ],
-              )
-            ],
-          ),
-          new ListTile(
-            title: new Text(articleInfo['title']),
-            subtitle: new Text(
-              articleInfo['summaryInfo'],
-              maxLines: 2,
+      child: new FlatButton(
+        padding: new EdgeInsets.all(0.0),
+        onPressed: () {
+          Navigator.push(
+              context,
+              new CupertinoPageRoute(
+                  builder: (context) => ArticleDetail(
+                        objectId: objectId,
+                        articleInfo: articleInfo,
+                      )));
+        },
+        child: new Column(
+          children: <Widget>[
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                new FlatButton(
+                    onPressed: null,
+                    child: new Row(
+                      children: <Widget>[
+                        new CircleAvatar(
+                          backgroundImage: new NetworkImage(
+                              articleInfo['user']['avatarLarge']),
+                        ),
+                        new Padding(padding: new EdgeInsets.only(right: 5.0)),
+                        new Text(
+                          articleInfo['user']['username'],
+                          style: new TextStyle(color: Colors.black),
+                        )
+                      ],
+                    )),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new FlatButton(
+                        onPressed: null,
+                        child: new Text(articleInfo['tags'][0]['title'])),
+                    new Text('/'),
+                    new FlatButton(
+                        onPressed: null,
+                        child: new Text(articleInfo['tags'][0]['title']))
+                  ],
+                )
+              ],
             ),
-          ),
-          new Row(
-            children: <Widget>[
-              new FlatButton(
-                  onPressed: null,
-                  child: new Row(
-                    children: <Widget>[
-                      new Icon(Icons.favorite),
-                      new Padding(padding: new EdgeInsets.only(right: 5.0)),
-                      new Text(articleInfo['collectionCount'].toString())
-                    ],
-                  )),
-              new FlatButton(
-                  onPressed: null,
-                  child: new Row(
-                    children: <Widget>[
-                      new Icon(Icons.message),
-                      new Padding(padding: new EdgeInsets.only(right: 5.0)),
-                      new Text(articleInfo['commentsCount'].toString())
-                    ],
-                  ))
-            ],
-          )
-        ],
+            new ListTile(
+              title: new Text(articleInfo['title']),
+              subtitle: new Text(
+                articleInfo['summaryInfo'],
+                maxLines: 2,
+              ),
+            ),
+            new Row(
+              children: <Widget>[
+                new FlatButton(
+                    onPressed: null,
+                    child: new Row(
+                      children: <Widget>[
+                        new Icon(Icons.favorite),
+                        new Padding(padding: new EdgeInsets.only(right: 5.0)),
+                        new Text(articleInfo['collectionCount'].toString())
+                      ],
+                    )),
+                new FlatButton(
+                    onPressed: null,
+                    child: new Row(
+                      children: <Widget>[
+                        new Icon(Icons.message),
+                        new Padding(padding: new EdgeInsets.only(right: 5.0)),
+                        new Text(articleInfo['commentsCount'].toString())
+                      ],
+                    ))
+              ],
+            )
+          ],
+        ),
       ),
       color: Colors.white,
     );
