@@ -1,6 +1,5 @@
 # 用flutter山寨一下掘金
 ![](screenshots/juejin.gif)
-![](screenshots/juejin2.gif)
 ## 写在前面
 最近开始学习flutter，自觉内容比较多，得多练练才能熟悉，于是乎就开始山寨掘金。话不多说，上图：
 ## 阅读重点
